@@ -36,9 +36,22 @@ def withdraw(bal: float | int | str | Decimal, amt: float | int | str | Decimal)
 
     return _round_currency(balance - amount)
 
+def interest(bal: float | int | str | Decimal, rate: float | int | str | Decimal) -> float:
+    """Apply percentage interest `rate` (e.g., 5 for 5%) to `bal` and return the updated balance."""
+    balance = _to_decimal(bal)
+    interest_rate = _to_decimal(rate)
+
+    if balance < 0:
+        raise ValueError("Balance cannot be negative.")
+    if interest_rate < 0:
+        raise ValueError("Interest rate cannot be negative.")
+
+    earned = (balance * interest_rate) / Decimal("100")
+    return _round_currency(balance + earned)
 
 if __name__ == "__main__":
     current_balance = 1000.00
     current_balance = deposit(current_balance, 250.00)
     current_balance = withdraw(current_balance, 150.00)
+    current_balance = interest(current_balance, 5.0)
     print(f"Balance after Phase 1 transactions: {current_balance:.2f}")
